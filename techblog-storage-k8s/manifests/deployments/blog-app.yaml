@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog-app
+  namespace: techblog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blog-app
+  template:
+    metadata:
+      labels:
+        app: blog-app
+    spec:
+      containers:
+        - name: blog-app
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          env:
+            - name: UPLOAD_PATH
+              value: /var/www/uploads
+          volumeMounts:
+            - name: cache-volume
+              mountPath: /tmp/cache
+            - name: logs-volume
+              mountPath: /var/log/app
+            - name: uploads-volume
+              mountPath: /var/www/uploads
+      volumes:
+        - name: cache-volume
+          emptyDir: {}
+        - name: logs-volume
+          hostPath:
+            path: /var/log/techblog
+            type: DirectoryOrCreate
+        - name: uploads-volume
+          persistentVolumeClaim:
+            claimName: uploads-pvc
