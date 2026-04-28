@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"host-based-ingress","namespace":"default"},"spec":{"rules":[{"host":"api.example.local","http":{"paths":[{"backend":{"service":{"name":"backend-service","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}},{"host":"app.example.local","http":{"paths":[{"backend":{"service":{"name":"frontend-service","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}}]}}
+  creationTimestamp: "2026-04-27T15:11:23Z"
+  generation: 1
+  name: host-based-ingress
+  namespace: default
+  resourceVersion: "154760"
+  uid: 2ef83abb-5391-457e-a817-d178e02db2d5
+spec:
+  tls:
+    - hosts:
+        - app.example.local
+        - api.example.local
+      secretName: example-tls
+  rules:
+  - host: api.example.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: backend-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: app.example.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+status:
+  loadBalancer: {}
